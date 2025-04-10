@@ -1,6 +1,5 @@
 import { IUserRepository } from "../interfaces/IUserRepository";
 import { User } from "../models/Users";
-import { UserRepository } from "../repositories/UserRepository";
 
 export class UserService {
        

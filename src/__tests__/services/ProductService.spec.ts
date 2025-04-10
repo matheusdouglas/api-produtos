@@ -4,42 +4,71 @@ import { IProductRepository } from '../../interfaces/IProductRepository';
 import { newProduct, Product } from '../../models/Product';
 
 describe('ProductService', () => {
-  it('deve criar um novo produto com sucesso', async () => {
 
-    const fakeNewProduct: newProduct = {
+  let mockRepository: jest.Mocked<IProductRepository>;
+  let service: ProductService;
+  let fakeNewProduct: newProduct;
+  let fakeProduct: Product;
+
+  beforeEach(() => {
+    fakeNewProduct = {
       name: "Produto Teste",
       description: "Descrição",
       price: 100,
       category: "Categoria Teste"
     };
-    // Segundo: o produto salvo, que tem ID (Product)
-    const fakeProduct: Product = {
+
+    fakeProduct = {
       id: 1,
       name: "Produto Teste",
       description: "Descrição",
       price: 100,
       category: "Categoria Teste"
     };
-    // Mock do repositório
-    const mockRepository: jest.Mocked<IProductRepository> = {
-        create: jest.fn(),
-        findAll: jest.fn(),
-        findById: jest.fn(),
-        findByCategory: jest.fn(),
-        delete: jest.fn(),
-        update: jest.fn(),
-      };
 
+    mockRepository = {
+      create: jest.fn(),
+      findAll: jest.fn(),
+      findById: jest.fn(),
+      findByCategory: jest.fn(),
+      delete: jest.fn(),
+      update: jest.fn(),
+    };
+
+    service = new ProductService(mockRepository);
+  });
+
+
+  it('deve criar um novo produto com sucesso', async () => {
     mockRepository.create.mockResolvedValue(fakeProduct);
 
-    // Instanciar o service com o mock
-    const service = new ProductService(mockRepository);
-
-    // Act - chama o método
     const result = await service.create(fakeNewProduct);
-
-    // Assert - verifica se voltou o esperado
     expect(result).toEqual(fakeProduct);
     expect(mockRepository.create).toHaveBeenCalledWith(fakeNewProduct);
+  });
+
+  it('Deve da erro ao tentar cadastrar usuario com name vazio', async () => {
+    const productFake = { ...fakeNewProduct, name: "" }
+    await expect(service.create(productFake)).rejects.toThrow("Product name is required")
+  });
+
+  it('Deve da erro ao tentar cadastrar usuario com categoria vazia', async () => {
+    const productFake = { ...fakeNewProduct, category: "" }
+    await expect(service.create(productFake)).rejects.toThrow("Product category is required")
+  });
+
+  it('Deve da erro ao tentar cadastrar usuario com descricao vazia', async () => {
+    const productFake = { ...fakeNewProduct, description: "" }
+    await expect(service.create(productFake)).rejects.toThrow("Product description is required")
+  });
+
+  it('Deve da erro ao tentar cadastrar um produto com o preco menor que 0', async () => {
+    const productFake = { ...fakeNewProduct, price: -1 }
+    await expect(service.create(productFake)).rejects.toThrow("Product price must be greater than 0")
+  });
+
+  it('Deve da erro ao tentar cadastrar um produto com o preco igual a 0', async () => {
+    const productFake = { ...fakeNewProduct, price: 0 }
+    await expect(service.create(productFake)).rejects.toThrow("Product price must be greater than 0")
   });
 });
