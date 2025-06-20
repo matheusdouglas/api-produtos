@@ -15,6 +15,8 @@ authRouter.post('/login', async (req, res) => {
     await authController.signIn(req, res);
   });
 
-authRouter.post('/register', createUserController.create)
+authRouter.post('/register', async (req, res) => {
+    await createUserController.create(req, res);
+});
 
 export default authRouter;

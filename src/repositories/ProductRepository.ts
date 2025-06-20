@@ -6,11 +6,11 @@ import { newProduct, Product } from '../models/Product';
 export class ProductRepository implements IProductRepository {
     async create(product: newProduct): Promise<Product> {
 
-        const query = `INSERT INTO products (name, description, price, category)
-                       VALUES ($1, $2, $3, $4)
+        const query = `INSERT INTO products (name, description, price, category, stock)
+                       VALUES ($1, $2, $3, $4, $5)
                        RETURNING *;
                       `
-        const products = await client.query(query, [product.name, product.description, product.price, product.category])
+        const products = await client.query(query, [product.name, product.description, product.price, product.category, product.stock])
 
         return products.rows[0];
     }
@@ -46,11 +46,11 @@ export class ProductRepository implements IProductRepository {
     async update(product: newProduct, id: number): Promise<Product | undefined> {
 
         const query = `UPDATE products
-                       SET name = $1, description = $2, price = $3, category = $4
-                       WHERE id = $5
+                       SET name = $1, description = $2, price = $3, category = $4, stock = $5
+                       WHERE id = $6
                        RETURNING *;
                       `
-        const products = await client.query(query, [product.name, product.description, product.price, product.category, id])
+        const products = await client.query(query, [product.name, product.description, product.price, product.category, product.stock, id])
 
         return products.rows[0];
     }

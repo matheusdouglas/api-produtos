@@ -7,9 +7,9 @@ export class ProductController {
 
     async create(req: Request, res: Response) {
         try {
-            const { name, price, category, description } = req.body as newProduct;
+            const { name, price, category, description, stock } = req.body as newProduct;
 
-            const product = await this.productService.create({ name, price, category, description });
+            const product = await this.productService.create({ name, price, category, description, stock });
             res.status(201).json(product);
         } catch (error: any) {
             res.status(400).json({ error: error.message });
@@ -21,7 +21,11 @@ export class ProductController {
             const products = await this.productService.findAll();
             res.status(200).json(products);
         } catch (error: any) {
-            res.status(404).json({ error: error.message });
+            if (error.message === 'Nenhum produto cadastrado.') {
+                res.status(404).json({ error: error.message });
+            } else {
+                res.status(500).json({ error: 'Erro interno do servidor.' });
+            }
         }
     }
 
@@ -54,14 +58,12 @@ export class ProductController {
 
     async delete(req: Request, res: Response) {
         try {
-
-
             const params = req.params.id
-
             const product = Number(params)
-
             const result = await this.productService.delete(product);
-
+            if (!result) {
+                return res.status(404).json({ error: 'Produto não encontrado' });
+            }
             res.status(200).json(result)
         } catch (error: any) {
             res.status(400).send({ error: error.message })

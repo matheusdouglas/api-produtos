@@ -4,6 +4,7 @@ export interface Product {
     description: string;
     price: number;
     category: string;
+    stock: number;
 }
 
 export interface newProduct {
@@ -11,4 +12,5 @@ export interface newProduct {
     description: string;
     price: number;
     category: string;
+    stock: number;
 }

@@ -15,7 +15,8 @@ describe('ProductService', () => {
       name: "Produto Teste",
       description: "Descrição",
       price: 100,
-      category: "Categoria Teste"
+      category: "Categoria Teste",
+      stock: 10
     };
 
     fakeProduct = {
@@ -23,7 +24,8 @@ describe('ProductService', () => {
       name: "Produto Teste",
       description: "Descrição",
       price: 100,
-      category: "Categoria Teste"
+      category: "Categoria Teste",
+      stock: 10
     };
 
     mockRepository = {

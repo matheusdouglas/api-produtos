@@ -12,11 +12,11 @@ const productService = new ProductService(productRepository)
 const productController = new ProductController(productService);
 
 
-router.post("/product", authMiddleware, productController.create);
-router.get("/products", authMiddleware, productController.findAll);
-router.get("/products/:id", authMiddleware, productController.findById);
-router.get('/products/category/:category', authMiddleware, productController.findByCategory);
-router.delete("/products/:id", authMiddleware, productController.delete);
-router.put("/products/:id", authMiddleware, productController.update);
+router.post("/product", authMiddleware, async (req, res) => { await productController.create(req, res); });
+router.get("/products", authMiddleware, async (req, res) => { await productController.findAll(req, res); });
+router.get("/products/:id", authMiddleware, async (req, res) => { await productController.findById(req, res); });
+router.get('/products/category/:category', authMiddleware, async (req, res) => { await productController.findByCategory(req, res); });
+router.delete("/products/:id", authMiddleware, async (req, res) => { await productController.delete(req, res); });
+router.put("/products/:id", authMiddleware, async (req, res) => { await productController.update(req, res); });
 export default router;
 
