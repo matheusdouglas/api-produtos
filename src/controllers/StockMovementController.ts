@@ -11,7 +11,13 @@ export class StockMovementController {
             const movement = await this.stockMovementService.create({ product_id, quantity, movement_type });
             res.status(201).json(movement);
         } catch (error: any) {
-            res.status(400).json({ error: error.message });
+            if (error.message === 'Produto não encontrado para movimentação de estoque.') {
+                res.status(404).json({ error: error.message });
+            } else if (error.message === 'Estoque insuficiente para saída.') {
+                res.status(400).json({ error: error.message });
+            } else {
+                res.status(400).json({ error: error.message });
+            }
         }
     }
 

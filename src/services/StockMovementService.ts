@@ -14,6 +14,9 @@ export class StockMovementService {
         if (!product) {
             throw new Error('Produto não encontrado para movimentação de estoque.');
         }
+        if (movement.movement_type === 'saida' && product.stock < movement.quantity) {
+            throw new Error('Estoque insuficiente para saída.');
+        }
         return this.stockMovementRepository.create(movement);
     }
 

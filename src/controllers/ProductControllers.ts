@@ -21,7 +21,7 @@ export class ProductController {
             const products = await this.productService.findAll();
             res.status(200).json(products);
         } catch (error: any) {
-            if (error.message === 'Nenhum produto cadastrado.') {
+            if (error.message === 'Nenhum produto cadastrado.' || error.message === 'Produto não encontrado') {
                 res.status(404).json({ error: error.message });
             } else {
                 res.status(500).json({ error: 'Erro interno do servidor.' });
@@ -41,7 +41,11 @@ export class ProductController {
             res.status(200).json(products)
 
         } catch (error: any) {
-            res.status(400).json({ error: error.message })
+            if (error.message === 'Nenhum produto cadastrado.' || error.message === 'Produto não encontrado') {
+                res.status(404).json({ error: error.message });
+            } else {
+                res.status(400).json({ error: error.message });
+            }
         }
     }
 

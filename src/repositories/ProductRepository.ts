@@ -40,7 +40,7 @@ export class ProductRepository implements IProductRepository {
     async delete(id: number): Promise<Product | undefined> {
         const query = `DELETE FROM products WHERE id = $1 RETURNING *`;
         const result = await client.query(query, [id]);
-        return result.rows[0];
+        return result.rows[0] || undefined;
     }
 
     async update(product: newProduct, id: number): Promise<Product | undefined> {

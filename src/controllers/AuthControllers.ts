@@ -14,14 +14,8 @@ export class AuthControllers {
       
           const findEmail = await repository.findByEmail(email);
       
-          if (!findEmail) {
-            return res.status(400).send("Usuário não existe");
-          }
-      
-          const isPasswordValid = await bcrypt.compare(password, findEmail.password);
-      
-          if (!isPasswordValid) {
-            return res.status(400).send("Senha incorreta");
+          if (!findEmail || !(await bcrypt.compare(password, findEmail.password))) {
+            return res.status(401).json({ error: 'Credenciais inválidas' });
           }
       
           const token = jwt.sign(
