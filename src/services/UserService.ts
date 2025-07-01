@@ -1,7 +1,8 @@
 import { IUserRepository } from "../interfaces/IUserRepository";
+import { IUserService } from "../interfaces/IUserService";
 import { User } from "../models/Users";
 
-export class UserService {
+export class UserService implements IUserService {
        
     constructor(private userRepository : IUserRepository) {}
     

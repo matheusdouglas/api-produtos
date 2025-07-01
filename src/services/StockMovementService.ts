@@ -14,9 +14,16 @@ export class StockMovementService {
         if (!product) {
             throw new Error('Produto não encontrado para movimentação de estoque.');
         }
-        if (movement.movement_type === 'saida' && product.stock < movement.quantity) {
-            throw new Error('Estoque insuficiente para saída.');
+
+        const validTypes = ['entrada', 'saida', 'ajuste'];
+        if (!validTypes.includes(movement.movement_type)) {
+            throw new Error('Tipo de movimentação inválido. Use: entrada, saida ou ajuste.');
         }
+
+        if (movement.movement_type === 'saida' && product.stock < movement.quantity) {
+            throw new Error(`Estoque insuficiente para saída. Estoque atual: ${product.stock}, quantidade a ser removida: ${movement.quantity}`);
+        }
+
         return this.stockMovementRepository.create(movement);
     }
 

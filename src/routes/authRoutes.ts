@@ -5,11 +5,14 @@ import { UserService } from '../services/UserService';
 import { UserRepository } from '../repositories/UserRepository';
 
 const authRouter = Router();
-const authController = new AuthControllers();
 
 const createUserRepository = new UserRepository
 const createUserService = new UserService(createUserRepository)
+
+const authController = new AuthControllers(createUserService);  
 const createUserController = new CreateUserController(createUserService)
+
+
 
 authRouter.post('/login', async (req, res) => {
     await authController.signIn(req, res);

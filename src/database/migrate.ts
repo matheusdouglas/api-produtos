@@ -11,20 +11,27 @@ const query = `
   );
 `;
 
+const typeQuery = `
+  CREATE TYPE movement_type AS ENUM ('entrada', 'saida', 'ajuste');
+`;
+
 const stockMovementsQuery = `
   CREATE TABLE IF NOT EXISTS stock_movements (
     id SERIAL PRIMARY KEY,
     product_id INT NOT NULL REFERENCES products(id),
     quantity INT NOT NULL, -- positivo para entrada, negativo para saída
-    movement_type VARCHAR(50) NOT NULL, -- exemplo: 'entrada', 'saida', 'ajuste'
+    movement_type movement_type NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
-`;
+`;  
 
 const triggerFunctionQuery = `
   CREATE OR REPLACE FUNCTION update_product_stock()
   RETURNS TRIGGER AS $$
   BEGIN
+    IF (SELECT stock FROM products WHERE id = NEW.product_id) + NEW.quantity < 0 THEN
+      RAISE EXCEPTION 'Estoque insuficiente';
+    END IF;
     UPDATE products
     SET stock = stock + NEW.quantity
     WHERE id = NEW.product_id;
@@ -45,6 +52,7 @@ async function createTable() {
     try {
         await client.connect();
         await client.query(query);
+        await client.query(typeQuery);
         await client.query(stockMovementsQuery);
         await client.query(triggerFunctionQuery);
         await client.query(triggerQuery);

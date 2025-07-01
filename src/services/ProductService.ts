@@ -7,7 +7,7 @@ export class ProductService implements IProductService {
 
 
     async create(product: newProduct): Promise<Product> {
-        if (product.name == '') {
+        if (!product.name || product.name.trim() == '') {
             throw new Error('Product name is required');
         }
 

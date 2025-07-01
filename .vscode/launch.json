@@ -4,19 +4,27 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug API Produtos (ts-node)",
-      "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}/src/index.ts",
+      "name": "Debug com ts-node",
       "runtimeArgs": [
         "-r",
-        "ts-node"
+        "ts-node/register"
       ],
-      "runtimeExecutable": "node",
-      "env": {
-        "TS_NODE_PROJECT": "${workspaceFolder}/tsconfig.json"
-      },
+      "args": [
+        "${workspaceFolder}/src/index.ts"
+      ],
       "sourceMaps": true,
-      "outFiles": ["${workspaceFolder}/dist/**/*.js"]
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug código compilado (dist)",
+      "program": "${workspaceFolder}/dist/index.js",
+      "outFiles": [
+        "${workspaceFolder}/dist/**/*.js"
+      ],
+      "sourceMaps": true,
+      "skipFiles": ["<node_internals>/**"]
     }
   ]
-} 
+}
